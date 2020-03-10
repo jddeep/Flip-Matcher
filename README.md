@@ -1,6 +1,8 @@
 # card_flipper_game
 
-A new Flutter project.
+An Awesome combination of Animations and Dart programming to develop this game using Flutter :)
+
+<img src"/images/welcomescreen.png" width=300 /> <img src="/images/gameplayone.gif" width=300 /> <img src="/images/gameplaytwo.gif" width=300 />
 
 ## Getting Started
 
