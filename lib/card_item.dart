@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CardItem extends StatefulWidget {
-  final CardModel model;
-  final Function(bool isOpened, int id) onFlipCard;
+  final CardModel? model;
+  final Function(bool isOpened, int? id)? onFlipCard;
 
-  CardItem({Key key, this.model, this.onFlipCard})
+  CardItem({Key? key, this.model, this.onFlipCard})
       : super(key: key);
 
   @override
@@ -14,10 +14,10 @@ class CardItem extends StatefulWidget {
 }
 
 class CardItemState extends State<CardItem> with TickerProviderStateMixin {
-  AnimationController controller;
-  Animation<double> frontScale;
-  Animation<double> backScale;
-  String imagePrimary, imageSecondary;
+  late AnimationController controller;
+  late Animation<double> frontScale;
+  late Animation<double> backScale;
+  String? imagePrimary, imageSecondary;
 
   @override
   void initState() {
@@ -37,17 +37,17 @@ class CardItemState extends State<CardItem> with TickerProviderStateMixin {
     );
 
 
-    if (widget.model.status == ECardStatus.None) {
-      imagePrimary = widget.model.image;
+    if (widget.model!.status == ECardStatus.None) {
+      imagePrimary = widget.model!.image;
       imageSecondary = 'assets/00.png';
     } else {
       imagePrimary = 'assets/00.png';
-      imageSecondary = widget.model.image;
+      imageSecondary = widget.model!.image;
     }
 
-    if (widget.model.isNeedCloseEffect) {
+    if (widget.model!.isNeedCloseEffect) {
       controller.reverse(from: 1.0);
-      widget.model.isNeedCloseEffect = false;
+      widget.model!.isNeedCloseEffect = false;
     }
   }
 
@@ -55,12 +55,12 @@ class CardItemState extends State<CardItem> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
         child: Center(
-          child: widget.model.status == ECardStatus.Win
-              ? buildImage(widget.model.image)
+          child: widget.model!.status == ECardStatus.Win
+              ? buildImage(widget.model!.image!)
               : Stack(
                   children: <Widget>[
-                    buildCardLayout(backScale, imagePrimary),
-                    buildCardLayout(frontScale, imageSecondary),
+                    buildCardLayout(backScale, imagePrimary!),
+                    buildCardLayout(frontScale, imageSecondary!),
                   ],
                 ),
         ),
@@ -71,7 +71,7 @@ class CardItemState extends State<CardItem> with TickerProviderStateMixin {
     return AnimatedBuilder(
       child: buildImage(image),
       animation: animation,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         final Matrix4 transform = new Matrix4.identity()
           ..scale(animation.value, 1.0, 1.0);
         return new Transform(
@@ -90,15 +90,15 @@ class CardItemState extends State<CardItem> with TickerProviderStateMixin {
   }
 
   void flipCard() {
-    if (widget.model.status != ECardStatus.Win) {
+    if (widget.model!.status != ECardStatus.Win) {
       setState(() {
         if (controller.isCompleted || controller.velocity > 0) {
           controller
               .reverse()
-              .then((v) => widget.onFlipCard(false, widget.model.id));
+              .then((v) => widget.onFlipCard!(false, widget.model!.id));
         } else {
-          controller.forward().then((v) => widget.onFlipCard(
-              widget.model.status == ECardStatus.None, widget.model.id));
+          controller.forward().then((v) => widget.onFlipCard!(
+              widget.model!.status == ECardStatus.None, widget.model!.id));
         }
       });
     }
@@ -118,11 +118,11 @@ class CardItemState extends State<CardItem> with TickerProviderStateMixin {
 enum ECardStatus { None, Win, Opened }
 
 class CardModel {
-  String image;
-  int id;
+  String? image;
+  int? id;
   ECardStatus status;
   bool isNeedCloseEffect;
-  Key key;
+  Key? key;
 
   CardModel(
       {this.key,

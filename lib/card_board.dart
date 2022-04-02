@@ -6,11 +6,11 @@ import 'main.dart';
 import 'card_item.dart';
 
 class CardBoard extends StatefulWidget {
-  final Function() onWin;
-  final BuildContext context;
-   
+  final Function()? onWin;
+  final BuildContext? context;
+
   //const CardBoard({Key key, this.onWin}) : super(key: key);
-  CardBoard({Key key, this.onWin, this.context}) : super(key:key);
+  CardBoard({Key? key, this.onWin, this.context}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return CardBoardState();
@@ -19,24 +19,25 @@ class CardBoard extends StatefulWidget {
 
 class CardBoardState extends State<CardBoard> {
   List<int> openedCards = [];
-  List<CardModel> cards;
-  int a;
+  late List<CardModel> cards;
+  late int a;
   int score = 0;
   int time = 0;
 
   @override
   void initState() {
     super.initState();
-    a=1;
+    a = 1;
     cards = createCards();
   }
 
-
   List<CardModel> createCards() {
     List<String> asset = [];
-    List(10).forEach((f) => asset.add('0${(asset.length + 1)}.png'));
-    List(10).forEach((f) => asset.add('0${(asset.length - 10 + 1)}.png'));
-    return List(20).map((f) {
+    List.filled(10, null, growable: false)
+        .forEach((f) => asset.add('0${(asset.length + 1)}.png'));
+    List.filled(10, null, growable: false)
+        .forEach((f) => asset.add('0${(asset.length - 10 + 1)}.png'));
+    return List.filled(20, null, growable: false).map((f) {
       int index = Random().nextInt(1000) % asset.length;
       String _image =
           'assets/' + asset[index].substring(asset[index].length - 6);
@@ -56,12 +57,12 @@ class CardBoardState extends State<CardBoard> {
         childAspectRatio: 322 / 400,
         children: cards
             .map((f) =>
-            CardItem(key: f.key, model: f, onFlipCard: handleFlipCard))
+                CardItem(key: f.key, model: f, onFlipCard: handleFlipCard))
             .toList());
   }
 
-  void handleFlipCard(bool isOpened, int id) {
-    cards[id].isNeedCloseEffect = false;
+  handleFlipCard(bool isOpened, int? id) {
+    cards[id!].isNeedCloseEffect = false;
 
     checkOpenedCard(isOpened);
 
@@ -77,33 +78,31 @@ class CardBoardState extends State<CardBoard> {
     checkOver();
   }
 
-  void checkOver(){
-
-    if(a >= 11){
-      a=1;
-      BuildContext context = widget.context;
+  void checkOver() {
+    if (a >= 11) {
+      a = 1;
+      BuildContext context = widget.context!;
       showDialog(
-        context: context,
-        builder: (context){
-          return AlertDialog(
-            title: Text("Congratulations!"),
-            content: Text("You WIN !"),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: (){
-                  cards = createCards();
-                  Navigator.pop(context, MaterialPageRoute(builder: (context) => MyHomePage(score: 0, time: 0)));
-                  
-                },
-                child: Text("Play Again"),
-              ),
-            ],
-          );
-        }
-      );
-      
-
-      
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Congratulations!"),
+              content: Text("You WIN !"),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    cards = createCards();
+                    Navigator.pop(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MyHomePage(score: 0, time: 0)));
+                  },
+                  child: Text("Play Again"),
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -133,7 +132,7 @@ class CardBoardState extends State<CardBoard> {
         setCardWin(openedCards[1]);
         openedCards.clear();
         a++;
-        widget.onWin();
+        widget.onWin!();
       }
     }
   }
@@ -156,7 +155,6 @@ class CardBoardState extends State<CardBoard> {
     setState(() {
       cards[id].status = ECardStatus.Win;
       cards[id].key = UniqueKey();
-      
     });
   }
 }
